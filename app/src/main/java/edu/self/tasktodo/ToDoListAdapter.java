@@ -41,12 +41,19 @@ public class ToDoListAdapter extends ArrayAdapter {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         ItemHolder itemHolder;
-        if (convertView != null){
+        if (convertView == null){
             itemHolder = new ItemHolder();
             LayoutInflater inflater = LayoutInflater.from(context);
             convertView = inflater.inflate(resource, parent, false);
             itemHolder.tvDescription = convertView.findViewById(R.id.descriptionView);
 
+            convertView.setTag(itemHolder);
+        } else {
+            itemHolder = (ItemHolder) convertView.getTag();
         }
+        Task currentTask = this.taskList.get(position);
+        itemHolder.tvDescription.setText(currentTask.getTitle());
+
+        return convertView;
     }
 }

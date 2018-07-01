@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements ToDoCallback {
 
 
     @Override
-    public void onItemClick(Task task) {
+    public void onItemSelected(Task task) {
         showFragment(addEditFragment, todoListFragment);
         addEditFragment.setTodo(task);
     }

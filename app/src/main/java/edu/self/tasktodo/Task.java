@@ -17,4 +17,6 @@ public class Task {
     public void setPosition(int position) {
         this.position = position;
     }
+
+    public String getTitle() { return this.title; }
 }
