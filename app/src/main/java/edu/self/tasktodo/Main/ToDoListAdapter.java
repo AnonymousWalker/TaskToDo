@@ -1,4 +1,4 @@
-package edu.self.tasktodo;
+package edu.self.tasktodo.Main;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.self.tasktodo.R;
+import edu.self.tasktodo.Task;
 
 /**
  * Created by Hoang Anh on 01-Jul-18.
@@ -46,14 +49,15 @@ public class ToDoListAdapter extends ArrayAdapter {
             LayoutInflater inflater = LayoutInflater.from(context);
             convertView = inflater.inflate(resource, parent, false);
             itemHolder.tvDescription = convertView.findViewById(R.id.descriptionView);
-
+            itemHolder.letterCircle = convertView.findViewById(R.id.letterCircle);
             convertView.setTag(itemHolder);
         } else {
             itemHolder = (ItemHolder) convertView.getTag();
         }
         Task currentTask = this.taskList.get(position);
         itemHolder.tvDescription.setText(currentTask.getTitle());
-
+        char firstLetter = currentTask.getTitle().charAt(0);
+        itemHolder.letterCircle.setText(String.valueOf(firstLetter));
         return convertView;
     }
 }

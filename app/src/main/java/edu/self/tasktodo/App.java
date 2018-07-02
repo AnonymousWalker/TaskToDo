@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
  */
 
 public class App extends Application {
-    public static final String KEY_APP_NAME_SHARED_PREFERENCE = "TaskToDoPref";
+    public static final String APP_SHARED_PREFERENCE = "TaskTodoData";
 
     @Override
     public void onCreate() {
@@ -16,7 +16,7 @@ public class App extends Application {
     }
 
     public void savePref(String key, String value){
-        SharedPreferences caches = getSharedPreferences(KEY_APP_NAME_SHARED_PREFERENCE, MODE_PRIVATE);
+        SharedPreferences caches = getSharedPreferences(APP_SHARED_PREFERENCE, MODE_PRIVATE);
         SharedPreferences.Editor editCaches = caches.edit();
         editCaches.putString(key, value);
         editCaches.commit();
@@ -24,13 +24,13 @@ public class App extends Application {
 
     public String loadPref(String key)
     {
-        SharedPreferences caches = getSharedPreferences(KEY_APP_NAME_SHARED_PREFERENCE, MODE_PRIVATE);
+        SharedPreferences caches = getSharedPreferences(APP_SHARED_PREFERENCE, MODE_PRIVATE);
         return caches.getString(key, null);
     }
 
     public void clearPref(String key)
     {
-        SharedPreferences caches = getSharedPreferences("caches", 0);
+        SharedPreferences caches = getSharedPreferences(APP_SHARED_PREFERENCE, 0);
         SharedPreferences.Editor edCaches = caches.edit();
         edCaches.remove(key);
         edCaches.commit();
