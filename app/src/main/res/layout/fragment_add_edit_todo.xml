@@ -74,9 +74,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
                     android:text="Title"
-                    android:textStyle="italic"
                     android:textColor="@color/white"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"
+                    android:textStyle="italic" />
 
                 <EditText
                     android:id="@+id/txtTodoText"
@@ -91,12 +91,97 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
-
+            <!--Second part here-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="3">
+                android:layout_weight="3"
+                android:padding="30dp"
+                android:orientation="vertical">
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:paddingTop="20dp">
+
+                        <ImageView
+                            android:id="@+id/alarmIcon"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginTop="10dp"
+                            android:src="@drawable/ic_alarm_64" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="18dp"
+                            android:layout_toRightOf="@id/alarmIcon"
+                            android:text="Remind Me"
+                            android:textSize="17sp" />
+
+                        <android.support.v7.widget.SwitchCompat
+                            android:id="@+id/switchAlarm"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginRight="20dp"
+                            />
+                    </RelativeLayout>
+
+                    <LinearLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="top">
+
+
+                        <EditText
+                            android:id="@+id/todoDateEditText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:editable="false"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:gravity="center"
+                            android:textSize="16sp"
+                            android:textIsSelectable="false" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".2"
+                            android:gravity="center"
+                            android:padding="4dp"
+                            android:text="-"
+                            android:textColor="?attr/colorAccent"
+                            android:textSize="20sp" />
+
+                        <EditText
+                            android:id="@+id/todoTimeEditText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:editable="false"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:gravity="center"
+                            android:textSize="16sp"
+                            android:textIsSelectable="false" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"></LinearLayout>
             </LinearLayout>
         </LinearLayout>
 

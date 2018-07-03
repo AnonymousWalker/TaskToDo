@@ -1,5 +1,8 @@
 package edu.self.tasktodo;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -7,9 +10,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
+
+import java.text.DateFormatSymbols;
+import java.text.DecimalFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import edu.self.tasktodo.Main.MainActivity;
 
@@ -20,7 +31,7 @@ import edu.self.tasktodo.Main.MainActivity;
 public class AddEditFragment extends Fragment implements View.OnClickListener {
     private boolean detect;
     private Task currentTask;
-    private EditText txtTitle;
+    private EditText txtTitle, txtDate, txtTime;
     private ToDoCallback callback;
     private FloatingActionButton btnSave;
     private Button btnCancel, btnRemove;
@@ -32,10 +43,14 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_add_edit_todo, null);
         txtTitle = (EditText) rootView.findViewById(R.id.txtTodoText);
+        txtDate = rootView.findViewById(R.id.todoDateEditText);
+        txtTime = rootView.findViewById(R.id.todoTimeEditText);
         btnSave = rootView.findViewById(R.id.saveBtn);
         btnCancel = rootView.findViewById(R.id.discardBtn);
         btnRemove = rootView.findViewById(R.id.removeBtn);
 
+        txtDate.setOnClickListener(this);
+        txtTime.setOnClickListener(this);
         btnSave.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
         btnRemove.setOnClickListener(this);
@@ -51,11 +66,21 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        boolean isSuccessed;
         switch (view.getId()) {
-            case R.id.saveBtn:  //check before saving
+            case R.id.todoDateEditText: {
+                hideKeyboard(txtTitle);
+                handleEditDate();
+                break;
+            }
+            case R.id.todoTimeEditText: {
+                hideKeyboard(txtTitle);
+                handleEditTime();
+                break;
+            }
+            case R.id.saveBtn: {
                 String newTitle = txtTitle.getText().toString();
-                if (newTitle.isEmpty()){
+                //check before saving
+                if (newTitle.isEmpty()) {
                     Toast.makeText(this.getActivity(), INVALID_INPUT_ALERT, Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -65,7 +90,7 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
                     currentTask.setTitle(newTitle);
                     isAdd = false;
                 } else {
-                    //add new todo
+                    //add new to do
                     String id = String.valueOf(System.currentTimeMillis());
                     currentTask = new Task(id, newTitle);
                     isAdd = true;
@@ -74,18 +99,19 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
                 Toast.makeText(this.getActivity(), ADD_SUCCESSFULLY_ALERT, Toast.LENGTH_SHORT).show();
                 callback.backPress();
                 break;
-
-            case R.id.discardBtn:
+            }
+            case R.id.discardBtn: {
                 callback.backPress();
                 break;
-
-            case R.id.removeBtn:    //check before removing
-                if (currentTask == null){
+            }
+            case R.id.removeBtn: {   //check before removing
+                if (currentTask == null) {
                     callback.backPress();
                     return;
                 }
                 callback.itemRemoved(currentTask.getId());
                 break;
+            }
         }
     }
 
@@ -117,5 +143,61 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
             txtTitle.setText("");
         }
     }
+
+    private void hideKeyboard(EditText edTxt) {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(edTxt.getWindowToken(), 0);
+    }
+
+    private void handleEditDate(){
+        Date date;
+        if (currentTask != null && currentTask.getTodoDate() != null) {
+            date = currentTask.getTodoDate();
+        } else {
+            date = new Date();
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog.OnDateSetListener callback = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                //update date text
+                String monthName = new DateFormatSymbols().getMonths()[month-1];
+                txtDate.setText(day + " " + monthName + ", " + year);
+            }
+        };
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this.getActivity(), callback, year, month, day);
+        datePickerDialog.show();
+    }
+
+    private void handleEditTime() {
+        Date date;
+        if (currentTask != null && currentTask.getTodoDate() != null) {
+            date = currentTask.getTodoDate();
+        } else {
+            date = new Date();
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        final int minute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog.OnTimeSetListener callback = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int h, int min) {
+                DecimalFormat formatter = new DecimalFormat("00.#");
+                txtTime.setText(formatter.format(h) + ":" + formatter.format(minute));
+            }
+        };
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this.getActivity(), callback, hour, minute,true);
+        timePickerDialog.show();
+    }
+
 
 }
