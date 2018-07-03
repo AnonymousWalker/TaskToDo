@@ -48,25 +48,25 @@ public class MainActivity extends AppCompatActivity implements ToDoCallback {
     }
 
     @Override
-    public void onAddItem() {
+    public void addNewItem() {
         addEditFragment.setTodo(null);
         showFragment(addEditFragment, todoListFragment);
     }
 
     @Override
-    public void onItemSelected(Task task) {
+    public void itemSelected(Task task) {
         showFragment(addEditFragment, todoListFragment);
         addEditFragment.setTodo(task);
     }
 
     @Override
-    public void onItemSaved(Task task, boolean isAdd) {
+    public void itemSaved(Task task, boolean isAdd) {
         String keyId;
 
         if (isAdd){
-            keyId = Integer.toString(ToDoListFragment.CURRENT_IN_POSITION);
+            keyId = String.valueOf(System.currentTimeMillis());
         } else {
-            keyId = Integer.toString(task.getId());
+            keyId = task.getId();
         }
         application.savePref(keyId, task.getTitle());
 
@@ -75,16 +75,18 @@ public class MainActivity extends AppCompatActivity implements ToDoCallback {
     }
 
     @Override
-    public void onItemRemoved(Task task) {
-
+    public void itemRemoved(String id) {
+        application.removePref(id);
+        todoListFragment.refreshFragmentData();
+        backPress();
     }
 
-    @Override
+    @Override       //override default back button
     public void onBackPressed() {
-        backPressed();
+        backPress();
     }
 
-    public void backPressed()   //allows all fragments have access to the backPress
+    public void backPress()   //allows all fragments have access to the backPress
     {
         if (addEditFragment.isDetect() == true) {
                       addEditFragment.onDestroyView();

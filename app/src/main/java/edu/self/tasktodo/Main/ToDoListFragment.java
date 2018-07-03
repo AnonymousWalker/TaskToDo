@@ -31,7 +31,6 @@ public class ToDoListFragment extends Fragment implements AdapterView.OnItemClic
     private App app;
     private FloatingActionButton btnAddToDoTask;
     private Map<String, ?> allPref;
-    public static int CURRENT_IN_POSITION;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -42,7 +41,7 @@ public class ToDoListFragment extends Fragment implements AdapterView.OnItemClic
         btnAddToDoTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.onAddItem();
+                callback.addNewItem();
             }
         });
         return rootView;
@@ -52,7 +51,6 @@ public class ToDoListFragment extends Fragment implements AdapterView.OnItemClic
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //generate test items
         taskList = new ArrayList<Task>();
 //        taskList.add(new Task("Test1: Code"));
 //        taskList.add(new Task("Test2: Listening music"));
@@ -66,7 +64,6 @@ public class ToDoListFragment extends Fragment implements AdapterView.OnItemClic
         //GET: list of tasks in local db
         this.getListFromLocalData();
 
-        CURRENT_IN_POSITION = taskList.size();
         adapter = new ToDoListAdapter(this.getActivity(), R.layout.task_cell, taskList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
@@ -76,8 +73,7 @@ public class ToDoListFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Task selectedItem = taskList.get(i);
-        selectedItem.setId(i);
-        callback.onItemSelected(selectedItem);
+        callback.itemSelected(selectedItem);
     }
 
     public void refreshFragmentData(){
@@ -87,15 +83,12 @@ public class ToDoListFragment extends Fragment implements AdapterView.OnItemClic
         listView.setAdapter(adapter);
     }
 
-
     private void getListFromLocalData(){
         app = (App) getActivity().getApplication();
         SharedPreferences preferences = app.getSharedPreferences(App.APP_SHARED_PREFERENCE, App.MODE_PRIVATE);
         allPref = preferences.getAll();
         for (Map.Entry<String, ?> item : allPref.entrySet()){
-            if (item.getValue() instanceof String){
-                taskList.add(new Task((item.getValue()).toString()));
-            }
+            taskList.add(new Task(item.getKey().toString(), item.getValue().toString()));
         }
     }
 }

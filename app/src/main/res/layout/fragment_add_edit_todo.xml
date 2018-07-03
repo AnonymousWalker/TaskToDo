@@ -7,30 +7,46 @@
     android:orientation="vertical">
 
     <!--<include layout="@layout/base_toolbar" />-->
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/discardBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="20dp"
-            android:background="@drawable/ic_clear_white_24dp"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="right">
 
-        <Button
-            android:id="@+id/removeBtn"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginRight="25dp"
-            android:background="@drawable/ic_trash_bin_16"/>
-    </RelativeLayout>
+            <Button
+                android:id="@+id/discardBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:background="@drawable/ic_clear_white_24dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"></LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/removeBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:background="@drawable/ic_trash_bin_24x24" />
+        </LinearLayout>
+    </LinearLayout>
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -47,10 +63,10 @@
                 android:id="@+id/editTitleContainer"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:orientation="vertical"
                 android:layout_weight="1"
+                android:background="@color/colorPrimary"
                 android:gravity="center_vertical"
-                android:background="@color/colorPrimary">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tvTitle"
@@ -65,11 +81,11 @@
                     android:id="@+id/txtTodoText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
                     android:layout_marginLeft="30dp"
                     android:layout_marginRight="30dp"
-                    android:layout_marginBottom="20dp"
-                    android:textColor="@color/white"
                     android:hint=" What to do ..."
+                    android:textColor="@color/white"
                     android:textColorHint="@color/greyHint"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -91,10 +107,9 @@
             android:src="@drawable/ic_send_white_18dp"
             app:fabSize="normal"
             app:layout_anchor="@id/editTitleContainer"
-            app:layout_anchorGravity="bottom|right"/>
+            app:layout_anchorGravity="bottom|right" />
 
     </android.support.design.widget.CoordinatorLayout>
-
 
 
 </LinearLayout>

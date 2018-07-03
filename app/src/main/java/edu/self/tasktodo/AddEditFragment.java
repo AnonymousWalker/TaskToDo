@@ -1,21 +1,17 @@
 package edu.self.tasktodo;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Toast;
+
+import edu.self.tasktodo.Main.MainActivity;
 
 /**
  * Created by Hoang Anh on 01-Jul-18.
@@ -28,6 +24,8 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
     private ToDoCallback callback;
     private FloatingActionButton btnSave;
     private Button btnCancel, btnRemove;
+    private final String ADD_SUCCESSFULLY_ALERT = "Successfully saved";
+    private final String INVALID_INPUT_ALERT = "Invalid input";
 
     @Nullable
     @Override
@@ -53,26 +51,40 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+        boolean isSuccessed;
         switch (view.getId()) {
-            case R.id.saveBtn:
+            case R.id.saveBtn:  //check before saving
                 String newTitle = txtTitle.getText().toString();
-                if (newTitle.isEmpty()) return;
+                if (newTitle.isEmpty()){
+                    Toast.makeText(this.getActivity(), INVALID_INPUT_ALERT, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 boolean isAdd;
-                if (currentTask != null){
+                if (currentTask != null) {
                     currentTask.setTitle(newTitle);
                     isAdd = false;
                 } else {
-                    currentTask = new Task(newTitle);
+                    //add new todo
+                    String id = String.valueOf(System.currentTimeMillis());
+                    currentTask = new Task(id, newTitle);
                     isAdd = true;
                 }
-                callback.onItemSaved(currentTask, isAdd);
-                callback.backPressed();
+                callback.itemSaved(currentTask, isAdd);
+                Toast.makeText(this.getActivity(), ADD_SUCCESSFULLY_ALERT, Toast.LENGTH_SHORT).show();
+                callback.backPress();
                 break;
+
             case R.id.discardBtn:
-                callback.backPressed();
+                callback.backPress();
                 break;
-            case R.id.removeBtn:
-                callback.backPressed();
+
+            case R.id.removeBtn:    //check before removing
+                if (currentTask == null){
+                    callback.backPress();
+                    return;
+                }
+                callback.itemRemoved(currentTask.getId());
                 break;
         }
     }

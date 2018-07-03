@@ -6,24 +6,19 @@ package edu.self.tasktodo;
 
 public class Task {
     private String title;
-    private int id;
+    private String id;
     private String time;
 
-    public Task(String title) {
-        this.title = title;
-    }
-
-    public Task(String title, int id) {
+    public Task(String id, String title) {
         this.title = title;
         this.id = id;
     }
 
-    public int getId() {
+    public String getId() {
         return this.id;
     }
 
-
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

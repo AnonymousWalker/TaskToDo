@@ -28,7 +28,7 @@ public class App extends Application {
         return caches.getString(key, null);
     }
 
-    public void clearPref(String key)
+    public void removePref(String key)
     {
         SharedPreferences caches = getSharedPreferences(APP_SHARED_PREFERENCE, 0);
         SharedPreferences.Editor edCaches = caches.edit();

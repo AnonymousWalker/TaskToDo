@@ -5,9 +5,9 @@ package edu.self.tasktodo;
  */
 
 public interface ToDoCallback {
-    void onAddItem();
-    void onItemSelected(Task task);
-    void onItemSaved(Task task, boolean isAdd);
-    void onItemRemoved(Task task);
-    void backPressed();
+    void addNewItem();
+    void itemSelected(Task task);
+    void itemSaved(Task task, boolean isAdd);
+    void itemRemoved(String id);
+    void backPress();
 }
