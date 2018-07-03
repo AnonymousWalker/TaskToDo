@@ -7,46 +7,30 @@
     android:orientation="vertical">
 
     <!--<include layout="@layout/base_toolbar" />-->
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/colorPrimary"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="right">
+        android:background="@color/colorPrimary">
 
             <Button
                 android:id="@+id/discardBtn"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
                 android:layout_margin="10dp"
                 android:background="@drawable/ic_clear_white_24dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"></LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
 
             <Button
                 android:id="@+id/removeBtn"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop = "15dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/ic_trash_bin_24x24" />
-        </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -87,7 +71,7 @@
                     android:layout_marginRight="30dp"
                     android:hint=" What to do ..."
                     android:textColor="@color/white"
-                    android:textColorHint="@color/greyHint"
+                    android:textColorHint="@color/grey"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -124,12 +108,14 @@
 
                         <android.support.v7.widget.SwitchCompat
                             android:id="@+id/switchAlarm"
+                            android:theme="@style/SwitchCustomTheme"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
                             android:layout_alignParentTop="true"
                             android:layout_gravity="center"
+                            android:gravity="center"
                             android:layout_marginTop="4dp"
                             android:layout_marginRight="20dp"
                             />

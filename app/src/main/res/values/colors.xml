@@ -5,6 +5,7 @@
     <color name="colorAccent">#f5fdc90c</color>
     <color name="white">#ffffff</color>
     <color name="darkBackground">#595959</color>
-    <color name="greyHint">#b9b9b9</color>
+    <color name="grey">#b9b9b9</color>
     <color name="green">#59ea35</color>
+    <color name="switch_activated">#479af9</color>
 </resources>

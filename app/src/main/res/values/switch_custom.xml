@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<style name="SwitchCustomTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="android:textColorPrimaryDisableOnly">@color/grey</item>
+    <item name="colorAccent">@color/switch_activated</item>
+</style>
+</resources>

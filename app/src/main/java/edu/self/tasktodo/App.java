@@ -15,24 +15,24 @@ public class App extends Application {
         super.onCreate();
     }
 
-    public void savePref(String key, String value){
+    public void savePref(String keyId, String value){
         SharedPreferences caches = getSharedPreferences(APP_SHARED_PREFERENCE, MODE_PRIVATE);
         SharedPreferences.Editor editCaches = caches.edit();
-        editCaches.putString(key, value);
+        editCaches.putString(keyId, value);
         editCaches.commit();
     }
 
-    public String loadPref(String key)
+    public String loadPref(String keyId)
     {
         SharedPreferences caches = getSharedPreferences(APP_SHARED_PREFERENCE, MODE_PRIVATE);
-        return caches.getString(key, null);
+        return caches.getString(keyId, null);
     }
 
-    public void removePref(String key)
+    public void removePref(String keyId)
     {
         SharedPreferences caches = getSharedPreferences(APP_SHARED_PREFERENCE, 0);
         SharedPreferences.Editor edCaches = caches.edit();
-        edCaches.remove(key);
+        edCaches.remove(keyId);
         edCaches.commit();
     }
 }
