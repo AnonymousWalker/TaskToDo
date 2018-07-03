@@ -64,20 +64,13 @@ public class ToDoListFragment extends Fragment implements AdapterView.OnItemClic
         super.onActivityCreated(savedInstanceState);
 
         //GET: list of tasks in local db
-        app = (App) getActivity().getApplication();
-        SharedPreferences preferences = app.getSharedPreferences(App.APP_SHARED_PREFERENCE, App.MODE_PRIVATE);
-        allPref = preferences.getAll();
-        for (Map.Entry<String, ?> item : allPref.entrySet()){
-            if (item.getValue() instanceof String){
-                taskList.add(new Task((item.getValue()).toString()));
-            }
-        }
+        this.getListFromLocalData();
 
         CURRENT_IN_POSITION = taskList.size();
         adapter = new ToDoListAdapter(this.getActivity(), R.layout.task_cell, taskList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
-        callback = (ToDoCallback) this.getActivity();
+        callback = (ToDoCallback) getActivity();
     }
 
     @Override
@@ -87,11 +80,22 @@ public class ToDoListFragment extends Fragment implements AdapterView.OnItemClic
         callback.onItemSelected(selectedItem);
     }
 
-    public void refreshFragment(){
-//        Fragment frg = getActivity().getSupportFragmentManager().findFragmentByTag("ToDoListFragment");
-//        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        ft.detach(frg);
-//        ft.attach(frg);
-//        ft.commit();
+    public void refreshFragmentData(){
+        taskList.clear();
+        getListFromLocalData(); //refresh taskList
+        adapter = new ToDoListAdapter(this.getActivity(), R.layout.task_cell, taskList);
+        listView.setAdapter(adapter);
+    }
+
+
+    private void getListFromLocalData(){
+        app = (App) getActivity().getApplication();
+        SharedPreferences preferences = app.getSharedPreferences(App.APP_SHARED_PREFERENCE, App.MODE_PRIVATE);
+        allPref = preferences.getAll();
+        for (Map.Entry<String, ?> item : allPref.entrySet()){
+            if (item.getValue() instanceof String){
+                taskList.add(new Task((item.getValue()).toString()));
+            }
+        }
     }
 }

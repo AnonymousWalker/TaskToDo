@@ -35,9 +35,6 @@ public class MainActivity extends AppCompatActivity implements ToDoCallback {
     public void showFragment(Fragment fragmentToShow, Fragment fragmentToHide) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        if (fragmentToShow instanceof ToDoListFragment)
-            ((ToDoListFragment)fragmentToShow).refreshFragment();
-
         if (fragmentToShow.isAdded()) {
             transaction.show(fragmentToShow);
         }
@@ -71,8 +68,10 @@ public class MainActivity extends AppCompatActivity implements ToDoCallback {
         } else {
             keyId = Integer.toString(task.getId());
         }
-
         application.savePref(keyId, task.getTitle());
+
+        //trigger update
+        todoListFragment.refreshFragmentData();
     }
 
     @Override
