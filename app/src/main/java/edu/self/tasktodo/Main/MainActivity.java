@@ -75,6 +75,11 @@ public class MainActivity extends AppCompatActivity implements ToDoCallback {
     }
 
     @Override
+    public void onItemRemoved(Task task) {
+
+    }
+
+    @Override
     public void onBackPressed() {
         backPressed();
     }

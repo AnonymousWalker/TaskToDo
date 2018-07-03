@@ -27,7 +27,7 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
     private EditText txtTitle;
     private ToDoCallback callback;
     private FloatingActionButton btnSave;
-    private Button btnCancel;
+    private Button btnCancel, btnRemove;
 
     @Nullable
     @Override
@@ -36,9 +36,11 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
         txtTitle = (EditText) rootView.findViewById(R.id.txtTodoText);
         btnSave = rootView.findViewById(R.id.saveBtn);
         btnCancel = rootView.findViewById(R.id.discardBtn);
+        btnRemove = rootView.findViewById(R.id.removeBtn);
 
         btnSave.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
+        btnRemove.setOnClickListener(this);
         updateUI();
         return rootView;
     }
@@ -68,6 +70,10 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.discardBtn:
                 callback.backPressed();
+                break;
+            case R.id.removeBtn:
+                callback.backPressed();
+                break;
         }
     }
 
