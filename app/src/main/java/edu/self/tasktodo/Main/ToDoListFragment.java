@@ -3,6 +3,7 @@ package edu.self.tasktodo.Main;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,7 +13,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.SortedSet;
 
 import edu.self.tasktodo.App;
 import edu.self.tasktodo.R;
@@ -90,5 +96,11 @@ public class ToDoListFragment extends Fragment implements AdapterView.OnItemClic
         for (Map.Entry<String, ?> item : allPref.entrySet()){
             taskList.add(new Task(item.getKey().toString(), item.getValue().toString()));
         }
+        Collections.sort(taskList, new Comparator<Task>() {
+            @Override
+            public int compare(Task t1, Task t2) {
+                return t1.getId().compareTo(t2.getId());
+            }
+        });
     }
 }
