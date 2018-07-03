@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
+import com.google.gson.Gson;
+
 import edu.self.tasktodo.AddEditFragment;
 import edu.self.tasktodo.App;
 import edu.self.tasktodo.R;
@@ -68,7 +70,9 @@ public class MainActivity extends AppCompatActivity implements ToDoCallback {
         } else {
             keyId = task.getId();
         }
-        application.savePref(keyId, task.getTitle());
+        Gson json = new Gson();
+        String objectJson = json.toJson(task);
+        application.savePref(keyId, objectJson);
 
         //trigger update
         todoListFragment.refreshFragmentData();

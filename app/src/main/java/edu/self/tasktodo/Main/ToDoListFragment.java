@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -93,7 +95,10 @@ public class ToDoListFragment extends Fragment implements AdapterView.OnItemClic
         app = (App) getActivity().getApplication();
         SharedPreferences preferences = app.getSharedPreferences(App.APP_SHARED_PREFERENCE, App.MODE_PRIVATE);
         allPref = preferences.getAll();
+        Gson gson = new Gson();
         for (Map.Entry<String, ?> item : allPref.entrySet()){
+//          TODO:  CONVERT JSON TO TASK obj!!!
+
             taskList.add(new Task(item.getKey().toString(), item.getValue().toString()));
         }
         Collections.sort(taskList, new Comparator<Task>() {

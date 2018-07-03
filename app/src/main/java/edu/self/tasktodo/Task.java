@@ -7,11 +7,10 @@ import java.util.Date;
  */
 
 public class Task {
-    private String title;
     private String id;
+    private String title;
     private boolean hasReminder;
     private Date todoDate;
-    private String time;
 
     public Task(String id, String title) {
         this.title = title;

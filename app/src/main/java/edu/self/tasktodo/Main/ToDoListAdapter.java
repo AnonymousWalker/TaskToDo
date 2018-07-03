@@ -1,6 +1,7 @@
 package edu.self.tasktodo.Main;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import edu.self.tasktodo.R;
 import edu.self.tasktodo.Task;
@@ -58,6 +60,10 @@ public class ToDoListAdapter extends ArrayAdapter {
         itemHolder.tvDescription.setText(currentTask.getTitle());
         char firstLetter = currentTask.getTitle().charAt(0);
         itemHolder.letterCircle.setText(String.valueOf(firstLetter));
+        //set random color letter circle
+//        Random random = new Random();
+//        int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
+//        itemHolder.letterCircle.setBackgroundColor(color);
         return convertView;
     }
 }
