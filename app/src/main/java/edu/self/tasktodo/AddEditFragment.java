@@ -19,9 +19,11 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.text.DateFormatSymbols;
-import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import edu.self.tasktodo.Utils.AlarmUtil;
+import edu.self.tasktodo.Utils.Task;
 
 /**
  * Created by Hoang Anh on 01-Jul-18.
@@ -41,6 +43,7 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
     private long timeMilisecond = 0;
     private long dateAsMilisec = 0;
     private long timeClockAsMilisec = 0;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -62,7 +65,7 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
         switchReminder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            updateReminderPart(switchReminder.isChecked());
+                updateReminderPart(switchReminder.isChecked());
             }
         });
         updateUI();
@@ -98,18 +101,23 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
 
                 if (currentTask != null) {
                     //Edit existing item
+                    isAdd = false;
                     currentTask.setTitle(newTitle);
                     currentTask.setTodoTimeMilisec(timeAsMilisecond);
                     currentTask.setHasReminder(hasReminder);
-                    isAdd = false;
+
                 } else {
                     //Add New Item
+                    isAdd = true;
                     String id = String.valueOf(System.currentTimeMillis());
                     currentTask = new Task(id, newTitle, hasReminder, timeAsMilisecond);
-                    isAdd = true;
                 }
 
-                callback.itemSaved(currentTask, isAdd);
+                callback.itemSaved(currentTask); //if this line is put below, the id appears latency in 1 milisec
+                //set background alarm
+                if (hasReminder) {
+                    AlarmUtil.setAlarm(this.getActivity(), currentTask.getId(), currentTask.getTitle(), timeAsMilisecond);
+                }
                 Toast.makeText(this.getActivity(), ADD_SUCCESSFULLY_ALERT, Toast.LENGTH_SHORT).show();
                 callback.backPress();
                 break;
@@ -153,15 +161,24 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
     private void updateUI() {
         if (currentTask != null) {
             txtTitle.setText(currentTask.getTitle());
-            if (currentTask.isHasReminder()){
+            if (currentTask.isHasReminder()) {
                 //update reminder UI
                 switchReminder.setChecked(true);
+                timeMilisecond = currentTask.getTodoTimeMilisec();
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(currentTask.getTodoTimeMilisec());
-                String monthName = new DateFormatSymbols().getMonths()[calendar.get(Calendar.MONTH)];
-                String shortDate = String.format("%02d %s, %04d", calendar.get(Calendar.DAY_OF_MONTH),
-                        monthName, calendar.get(Calendar.YEAR));
-                String shortTime = String.format("%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+                calendar.setTimeInMillis(timeMilisecond);
+                int year = calendar.get(Calendar.YEAR);
+                int monthBase0 = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                int minute = calendar.get(Calendar.MINUTE);
+                String monthName = new DateFormatSymbols().getMonths()[monthBase0];
+                String shortDate = String.format("%02d %s, %04d", day, monthName, year);
+                String shortTime = String.format("%02d:%02d", hour, minute);
+                calendar.set(year, monthBase0, day, 0, 0, 0);
+                dateAsMilisec = calendar.getTimeInMillis();
+                timeClockAsMilisec = 1000 * (hour * 3600 + minute * 60);
+                timeMilisecond = dateAsMilisec + timeClockAsMilisec;
                 txtDate.setText(shortDate);
                 txtTime.setText(shortTime);
             } else {
@@ -177,17 +194,24 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void updateReminderPart(boolean isChecked){
+    private void updateReminderPart(boolean isChecked) {
         if (isChecked) {
             timeMilisecond = System.currentTimeMillis();
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(timeMilisecond);
-            String monthName = new DateFormatSymbols().getMonths()[calendar.get(Calendar.MONTH)];
-            String shortDate = String.format("%02d %s, %04d", calendar.get(Calendar.DAY_OF_MONTH),
-                    monthName, calendar.get(Calendar.YEAR));
-            String shortTime = String.format("%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+            int year = calendar.get(Calendar.YEAR);
+            int monthBase0 = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int minute = calendar.get(Calendar.MINUTE);
+            String monthName = new DateFormatSymbols().getMonths()[monthBase0];
+            String shortDate = String.format("%02d %s, %04d", day,
+                    monthName, year);
+            String shortTime = String.format("%02d:%02d", hour, minute);
             txtDate.setText(shortDate);
             txtTime.setText(shortTime);
+            timeClockAsMilisec = (hour * 3600 + minute * 60) * 1000;
+            dateAsMilisec = timeMilisecond - timeClockAsMilisec;
         } else {
             txtDate.setText("");
             txtTime.setText("");
@@ -214,15 +238,15 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
     }
 
     private void handleEditDate() {
-        final Date date;
-        if (currentTask != null && currentTask.getTodoTimeMilisec() > 0) {
-            date = new Date(currentTask.getTodoTimeMilisec());
+        long milliseconds;
+        if (currentTask != null && currentTask.isHasReminder()) {
+            milliseconds = currentTask.getTodoTimeMilisec();
         } else {
-            date = new Date();
+            milliseconds = System.currentTimeMillis();
         }
 
         final Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+        calendar.setTimeInMillis(milliseconds);
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -235,7 +259,7 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
                 txtDate.setText(String.format("%02d %s, %04d", day, monthName, year));
                 switchReminder.setChecked(true);
                 calendar.set(year, month, day, 0, 0, 0);
-                dateAsMilisec = calendar.getTimeInMillis();         //update date as mili
+                dateAsMilisec = calendar.getTimeInMillis();         //update date as milisec
                 timeMilisecond = dateAsMilisec + timeClockAsMilisec;    //update timeMili with time set
             }
         };
@@ -251,7 +275,7 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
         } else {
             date = new Date();
         }
-        final Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         final int minute = calendar.get(Calendar.MINUTE);
@@ -259,9 +283,9 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
         TimePickerDialog.OnTimeSetListener callback = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int h, int min) {
-                txtTime.setText(String.format("%2d:%2d", h, min));
+                txtTime.setText(String.format("%02d:%02d", h, min));
                 switchReminder.setChecked(true);
-                timeClockAsMilisec = (3600*h + 60*min)*1000;
+                timeClockAsMilisec = (3600 * h + 60 * min) * 1000;
                 timeMilisecond = dateAsMilisec + timeClockAsMilisec;    //update timeMili with time set
             }
         };

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import edu.self.tasktodo.R;
-import edu.self.tasktodo.Task;
+import edu.self.tasktodo.Utils.Task;
 
 /**
  * Created by Hoang Anh on 01-Jul-18.
@@ -67,8 +67,9 @@ public class ToDoListAdapter extends ArrayAdapter {
         if (currentTask.isHasReminder()) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(currentTask.getTodoTimeMilisec());
-            String shortDateTime = calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH)+1) +
-                    "/" + calendar.get(Calendar.YEAR) +" at "+ calendar.get(Calendar.HOUR_OF_DAY) +":" + calendar.get(Calendar.MINUTE);
+            String shortDateTime = String.format("%02d/%02d/%04d at %02d:%02d",
+                    calendar.get(Calendar.DAY_OF_MONTH), (calendar.get(Calendar.MONTH)+1), calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
             itemHolder.dateCellView.setText(shortDateTime);
         } else {
             itemHolder.dateCellView.setText("");

@@ -3,28 +3,25 @@ package edu.self.tasktodo.Main;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.SortedSet;
 
 import edu.self.tasktodo.App;
 import edu.self.tasktodo.R;
-import edu.self.tasktodo.Task;
+import edu.self.tasktodo.Utils.Task;
 import edu.self.tasktodo.ToDoCallback;
 
 /**
@@ -38,6 +35,7 @@ public class ToDoListFragment extends Fragment implements AdapterView.OnItemClic
     private ToDoCallback callback;
     private App app;
     private FloatingActionButton btnAddToDoTask;
+    private Button btnRemoveAll;
     private Map<String, ?> allPref;
     @Nullable
     @Override
@@ -45,11 +43,19 @@ public class ToDoListFragment extends Fragment implements AdapterView.OnItemClic
         View rootView = inflater.inflate(R.layout.fragment_todo_list, null);
         listView = rootView.findViewById(R.id.list_item);
         btnAddToDoTask = rootView.findViewById(R.id.addTodoBtn);
+        btnRemoveAll = rootView.findViewById(R.id.removeAllBtn);
 
         btnAddToDoTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callback.addNewItem();
+            }
+        });
+        btnRemoveAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                app.removeAllPref();
+                refreshFragmentData();
             }
         });
         return rootView;

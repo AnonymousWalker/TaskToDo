@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textColor="@color/reminderBodyTextColor"
-            android:textSize="22dp" />
+            android:textSize="18dp" />
 
 
     </LinearLayout>

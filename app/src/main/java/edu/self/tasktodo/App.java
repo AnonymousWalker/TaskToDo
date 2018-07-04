@@ -35,4 +35,11 @@ public class App extends Application {
         edCaches.remove(keyId);
         edCaches.commit();
     }
+
+    public void removeAllPref(){
+        SharedPreferences caches = getSharedPreferences(APP_SHARED_PREFERENCE, 0);
+        SharedPreferences.Editor edCaches = caches.edit();
+        edCaches.clear();
+        edCaches.commit();
+    }
 }

@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 import edu.self.tasktodo.AddEditFragment;
 import edu.self.tasktodo.App;
 import edu.self.tasktodo.R;
-import edu.self.tasktodo.Task;
+import edu.self.tasktodo.Utils.Task;
 import edu.self.tasktodo.ToDoCallback;
 
 public class MainActivity extends AppCompatActivity implements ToDoCallback {
@@ -62,17 +62,11 @@ public class MainActivity extends AppCompatActivity implements ToDoCallback {
     }
 
     @Override
-    public void itemSaved(Task task, boolean isAdd) {
+    public void itemSaved(Task task) {
         String keyId;
-
-        if (isAdd){
-            keyId = String.valueOf(System.currentTimeMillis());
-        } else {
-            keyId = task.getId();
-        }
         Gson json = new Gson();
         String objectJson = json.toJson(task);
-        application.savePref(keyId, objectJson);
+        application.savePref(task.getId(), objectJson);
 
         //trigger update
         todoListFragment.refreshFragmentData();
