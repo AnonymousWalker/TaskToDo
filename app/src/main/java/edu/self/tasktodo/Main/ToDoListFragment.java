@@ -90,6 +90,12 @@ public class ToDoListFragment extends Fragment implements AdapterView.OnItemClic
         callback.itemSelected(selectedItem);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshFragmentData();
+    }
+
     public void refreshFragmentData(){
         taskList.clear();
         getListFromLocalData(); //refresh taskList

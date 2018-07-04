@@ -20,20 +20,22 @@ import edu.self.tasktodo.Utils.AlarmUtil;
 public class ReminderActivity extends AppCompatActivity{
     private Button btnRemoveTodoReminder;
     private TextView txtTodoReminderBody;
-
+    private Intent intent;
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_reminder);
 
         btnRemoveTodoReminder = findViewById(R.id.toDoReminderRemoveBtn);
-        txtTodoReminderBody = findViewById(R.id.toDoReminderTextViewBody);
+        txtTodoReminderBody = findViewById(R.id.reminderBodyTxt);
 
+        intent = getIntent();
+        txtTodoReminderBody.setText(intent.getStringExtra(AlarmUtil.MESSAGE_INTENT));
         btnRemoveTodoReminder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //TODO: remove the task from SharedPref
-                Intent intent = getIntent();
+
                 String taskId = intent.getStringExtra(AlarmUtil.ID_INTENT);
                 App application = (App) getApplication();
                 application.removePref(taskId);

@@ -37,9 +37,10 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
     private ToDoCallback callback;
     private FloatingActionButton btnSave;
     private Button btnCancel, btnRemove;
-    private final String ADD_SUCCESSFULLY_ALERT = "Successfully saved";
-    private final String EMPTY_INPUT_ALERT = "Empty title is not allowed";
-    private final String INVALID_DATETIME_INPUT = "Invalid DateTime";
+    private static final String ADD_SUCCESSFULLY_ALERT = "Successfully saved";
+    private static final String EMPTY_INPUT_ALERT = "Empty title is not allowed";
+    private static final String INVALID_DATETIME_INPUT_ALERT = "Invalid DateTime";
+    private static final String DATE_IN_THE_PAST_ALERT = "Date time cannot be in the past";
     private long timeMilisecond = 0;
     private long dateAsMilisec = 0;
     private long timeClockAsMilisec = 0;
@@ -65,6 +66,7 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
         switchReminder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                hideKeyboard(txtTitle);
                 updateReminderPart(switchReminder.isChecked());
             }
         });
@@ -97,7 +99,7 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
                 String newTitle = txtTitle.getText().toString();
 
                 //validate before saving
-                if (!isValidated(hasReminder, newTitle)) return;
+                if (!isValidated(hasReminder, newTitle, timeAsMilisecond)) return;
 
                 if (currentTask != null) {
                     //Edit existing item
@@ -218,14 +220,19 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private boolean isValidated(boolean hasReminder, String newTitle) {
+    private boolean isValidated(boolean hasReminder, String newTitle, long time) {
         if (newTitle.isEmpty()) {
             Toast.makeText(this.getActivity(), EMPTY_INPUT_ALERT, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (hasReminder && (txtDate.getText().toString().isEmpty()
                 || txtTime.getText().toString().isEmpty())) {
-            Toast.makeText(this.getActivity(), INVALID_DATETIME_INPUT, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.getActivity(), INVALID_DATETIME_INPUT_ALERT, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (time < (System.currentTimeMillis() - 60000)){  //differ > 1 min
+            Toast.makeText(this.getActivity(), DATE_IN_THE_PAST_ALERT, Toast.LENGTH_SHORT).show();
             return false;
         }
 

@@ -20,7 +20,7 @@ public class AlarmUtil {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         Intent intent = new Intent(context, IntentNotificationService.class);
-        intent.putExtra(ID_INTENT, Long.valueOf(id));
+        intent.putExtra(ID_INTENT, id);
         intent.putExtra(MESSAGE_INTENT, title);
 //      invoke when alarm goes off
         PendingIntent pendingIntent =
