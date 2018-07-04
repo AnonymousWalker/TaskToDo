@@ -1,7 +1,6 @@
 package edu.self.tasktodo.Main;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,8 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.Calendar;
 
 import edu.self.tasktodo.R;
 import edu.self.tasktodo.Task;
@@ -39,7 +37,8 @@ public class ToDoListAdapter extends ArrayAdapter {
     }
 
     private final class ItemHolder{
-        TextView tvDescription;
+        TextView titleCellView;
+        TextView dateCellView;
         TextView letterCircle;
     }
     @NonNull
@@ -50,20 +49,30 @@ public class ToDoListAdapter extends ArrayAdapter {
             itemHolder = new ItemHolder();
             LayoutInflater inflater = LayoutInflater.from(context);
             convertView = inflater.inflate(resource, parent, false);
-            itemHolder.tvDescription = convertView.findViewById(R.id.descriptionView);
+            itemHolder.titleCellView = convertView.findViewById(R.id.titleCellView);
+            itemHolder.dateCellView = convertView.findViewById(R.id.dateCellView);
             itemHolder.letterCircle = convertView.findViewById(R.id.letterCircle);
             convertView.setTag(itemHolder);
         } else {
             itemHolder = (ItemHolder) convertView.getTag();
         }
         Task currentTask = this.taskList.get(position);
-        itemHolder.tvDescription.setText(currentTask.getTitle());
+        itemHolder.titleCellView.setText(currentTask.getTitle());
         char firstLetter = currentTask.getTitle().charAt(0);
         itemHolder.letterCircle.setText(String.valueOf(firstLetter));
         //set random color letter circle
 //        Random random = new Random();
 //        int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
 //        itemHolder.letterCircle.setBackgroundColor(color);
+        if (currentTask.isHasReminder()) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(currentTask.getTodoTimeMilisec());
+            String shortDateTime = calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH)+1) +
+                    "/" + calendar.get(Calendar.YEAR) +" at "+ calendar.get(Calendar.HOUR_OF_DAY) +":" + calendar.get(Calendar.MINUTE);
+            itemHolder.dateCellView.setText(shortDateTime);
+        } else {
+            itemHolder.dateCellView.setText("");
+        }
         return convertView;
     }
 }

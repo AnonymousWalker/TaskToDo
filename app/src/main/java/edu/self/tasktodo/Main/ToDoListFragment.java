@@ -98,8 +98,9 @@ public class ToDoListFragment extends Fragment implements AdapterView.OnItemClic
         Gson gson = new Gson();
         for (Map.Entry<String, ?> item : allPref.entrySet()){
 //          TODO:  CONVERT JSON TO TASK obj!!!
-
-            taskList.add(new Task(item.getKey().toString(), item.getValue().toString()));
+            //taskList.add(new Task(item.getKey().toString(), item.getValue().toString()));
+            Task task = gson.fromJson(item.getValue().toString(), Task.class);
+            taskList.add(task);
         }
         Collections.sort(taskList, new Comparator<Task>() {
             @Override

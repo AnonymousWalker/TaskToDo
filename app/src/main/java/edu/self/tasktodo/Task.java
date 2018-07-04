@@ -10,19 +10,18 @@ public class Task {
     private String id;
     private String title;
     private boolean hasReminder;
-    private Date todoDate;
+    private long todoTimeMilisec;
 
     public Task(String id, String title) {
         this.title = title;
         this.id = id;
-        this.todoDate = null;
     }
 
-    public Task(String id, String title, boolean hasReminder, Date date){
+    public Task(String id, String title, boolean hasReminder, long timeMilisec){
         this.id = id;
         this.title = title;
         this.hasReminder = hasReminder;
-        this.todoDate = date;
+        this.todoTimeMilisec = timeMilisec;
     }
 
     public String getId() {
@@ -49,11 +48,11 @@ public class Task {
         this.hasReminder = hasReminder;
     }
 
-    public Date getTodoDate() {
-        return todoDate;
+    public long getTodoTimeMilisec() {
+        return todoTimeMilisec;
     }
 
-    public void setTodoDate(Date todoDate) {
-        this.todoDate = todoDate;
+    public void setTodoTimeMilisec(long timeMilisec) {
+        this.todoTimeMilisec = timeMilisec;
     }
 }

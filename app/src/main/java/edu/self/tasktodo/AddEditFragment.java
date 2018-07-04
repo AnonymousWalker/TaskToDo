@@ -38,8 +38,9 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
     private final String ADD_SUCCESSFULLY_ALERT = "Successfully saved";
     private final String EMPTY_INPUT_ALERT = "Empty title is not allowed";
     private final String INVALID_DATETIME_INPUT = "Invalid DateTime";
-    private long timeAsMilisec;
-
+    private long timeMilisecond = 0;
+    private long dateAsMilisec = 0;
+    private long timeClockAsMilisec = 0;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,12 +58,11 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
         btnSave.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
         btnRemove.setOnClickListener(this);
+
         switchReminder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (switchReminder.isChecked()) {
-                    timeAsMilisec = System.currentTimeMillis();
-                }
+            updateReminderPart(switchReminder.isChecked());
             }
         });
         updateUI();
@@ -90,25 +90,22 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
             }
             case R.id.saveBtn: {
                 boolean isAdd, hasReminder = switchReminder.isChecked();
+                long timeAsMilisecond = (hasReminder) ? timeMilisecond : -1;
                 String newTitle = txtTitle.getText().toString();
 
                 //validate before saving
                 if (!isValidated(hasReminder, newTitle)) return;
 
                 if (currentTask != null) {
+                    //Edit existing item
                     currentTask.setTitle(newTitle);
-                    if (hasReminder) {
-                        //edit date time
-                        currentTask.setTodoDate(new Date(timeAsMilisec));
-                    } else {
-                        currentTask.setTodoDate(null);
-                    }
+                    currentTask.setTodoTimeMilisec(timeAsMilisecond);
+                    currentTask.setHasReminder(hasReminder);
                     isAdd = false;
                 } else {
-                    //add new to do
+                    //Add New Item
                     String id = String.valueOf(System.currentTimeMillis());
-                    Date date = (hasReminder) ? new Date(timeAsMilisec) : null;
-                    currentTask = new Task(id, newTitle, hasReminder, date);
+                    currentTask = new Task(id, newTitle, hasReminder, timeAsMilisecond);
                     isAdd = true;
                 }
 
@@ -156,8 +153,44 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
     private void updateUI() {
         if (currentTask != null) {
             txtTitle.setText(currentTask.getTitle());
+            if (currentTask.isHasReminder()){
+                //update reminder UI
+                switchReminder.setChecked(true);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(currentTask.getTodoTimeMilisec());
+                String monthName = new DateFormatSymbols().getMonths()[calendar.get(Calendar.MONTH)];
+                String shortDate = String.format("%02d %s, %04d", calendar.get(Calendar.DAY_OF_MONTH),
+                        monthName, calendar.get(Calendar.YEAR));
+                String shortTime = String.format("%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+                txtDate.setText(shortDate);
+                txtTime.setText(shortTime);
+            } else {
+                switchReminder.setChecked(false);
+                txtDate.setText("");
+                txtTime.setText("");
+            }
         } else {
+            switchReminder.setChecked(false);
             txtTitle.setText("");
+            txtDate.setText("");
+            txtTime.setText("");
+        }
+    }
+
+    private void updateReminderPart(boolean isChecked){
+        if (isChecked) {
+            timeMilisecond = System.currentTimeMillis();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(timeMilisecond);
+            String monthName = new DateFormatSymbols().getMonths()[calendar.get(Calendar.MONTH)];
+            String shortDate = String.format("%02d %s, %04d", calendar.get(Calendar.DAY_OF_MONTH),
+                    monthName, calendar.get(Calendar.YEAR));
+            String shortTime = String.format("%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+            txtDate.setText(shortDate);
+            txtTime.setText(shortTime);
+        } else {
+            txtDate.setText("");
+            txtTime.setText("");
         }
     }
 
@@ -181,14 +214,14 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
     }
 
     private void handleEditDate() {
-        Date date;
-        if (currentTask != null && currentTask.getTodoDate() != null) {
-            date = currentTask.getTodoDate();
+        final Date date;
+        if (currentTask != null && currentTask.getTodoTimeMilisec() > 0) {
+            date = new Date(currentTask.getTodoTimeMilisec());
         } else {
             date = new Date();
         }
 
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
@@ -197,10 +230,13 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
         DatePickerDialog.OnDateSetListener callback = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                //update date text
-                String monthName = new DateFormatSymbols().getMonths()[month - 1];
-                txtDate.setText(day + " " + monthName + ", " + year);
+                //update date
+                String monthName = new DateFormatSymbols().getMonths()[month];
+                txtDate.setText(String.format("%02d %s, %04d", day, monthName, year));
                 switchReminder.setChecked(true);
+                calendar.set(year, month, day, 0, 0, 0);
+                dateAsMilisec = calendar.getTimeInMillis();         //update date as mili
+                timeMilisecond = dateAsMilisec + timeClockAsMilisec;    //update timeMili with time set
             }
         };
 
@@ -210,12 +246,12 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
 
     private void handleEditTime() {
         Date date;
-        if (currentTask != null && currentTask.getTodoDate() != null) {
-            date = currentTask.getTodoDate();
+        if (currentTask != null && currentTask.getTodoTimeMilisec() > 0) {
+            date = new Date(currentTask.getTodoTimeMilisec());
         } else {
             date = new Date();
         }
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         final int minute = calendar.get(Calendar.MINUTE);
@@ -223,9 +259,10 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
         TimePickerDialog.OnTimeSetListener callback = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int h, int min) {
-                DecimalFormat formatter = new DecimalFormat("00.#");
-                txtTime.setText(formatter.format(h) + ":" + formatter.format(minute));
+                txtTime.setText(String.format("%2d:%2d", h, min));
                 switchReminder.setChecked(true);
+                timeClockAsMilisec = (3600*h + 60*min)*1000;
+                timeMilisecond = dateAsMilisec + timeClockAsMilisec;    //update timeMili with time set
             }
         };
         TimePickerDialog timePickerDialog = new TimePickerDialog(this.getActivity(), callback, hour, minute, true);
