@@ -12,7 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -39,6 +41,7 @@ public class ToDoListFragment extends Fragment implements AdapterView.OnItemClic
     private FloatingActionButton btnAddToDoTask;
     private Button btnRemoveAll;
     private Map<String, ?> allPref;
+    private LinearLayout emptyLvLayout;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -46,6 +49,7 @@ public class ToDoListFragment extends Fragment implements AdapterView.OnItemClic
         listView = rootView.findViewById(R.id.list_item);
         btnAddToDoTask = rootView.findViewById(R.id.addTodoBtn);
         btnRemoveAll = rootView.findViewById(R.id.removeAllBtn);
+        emptyLvLayout = rootView.findViewById(R.id.emptyListView);
 
         btnAddToDoTask.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -62,6 +66,7 @@ public class ToDoListFragment extends Fragment implements AdapterView.OnItemClic
                 refreshFragmentData();
             }
         });
+
         return rootView;
     }
 
@@ -104,6 +109,8 @@ public class ToDoListFragment extends Fragment implements AdapterView.OnItemClic
         taskList.clear();
         getListFromLocalData(); //refresh taskList
         adapter = new ToDoListAdapter(this.getActivity(), R.layout.task_cell, taskList);
+        if (taskList.size() == 0) emptyLvLayout.setVisibility(View.VISIBLE);
+        else emptyLvLayout.setVisibility(View.GONE);
         listView.setAdapter(adapter);
     }
 
