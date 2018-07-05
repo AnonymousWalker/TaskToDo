@@ -235,7 +235,7 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
             return false;
         }
 
-        if (time < (System.currentTimeMillis() - 60000)){  //differ > 1 min
+        if (hasReminder && time < (System.currentTimeMillis() - 30000)){  //differ > 30s
             Toast.makeText(this.getActivity(), DATE_IN_THE_PAST_ALERT, Toast.LENGTH_SHORT).show();
             return false;
         }
