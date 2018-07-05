@@ -3,8 +3,10 @@ package edu.self.tasktodo;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SwitchCompat;
@@ -80,6 +82,7 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
         callback = (ToDoCallback) getActivity();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -94,6 +97,7 @@ public class AddEditFragment extends Fragment implements View.OnClickListener {
                 break;
             }
             case R.id.saveBtn: {
+                btnSave.setBackgroundColor(btnSave.getContext().getResources().getColor(R.color.floatingButtonOnPressed, null));
                 boolean isAdd, hasReminder = switchReminder.isChecked();
                 long timeAsMilisecond = (hasReminder) ? timeMilisecond : -1;
                 String newTitle = txtTitle.getText().toString();

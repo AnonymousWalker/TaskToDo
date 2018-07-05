@@ -9,4 +9,5 @@
     <color name="grey">#b9b9b9</color>
     <color name="green">#59ea35</color>
     <color name="switch_activated">#479af9</color>
+    <color name="floatingButtonOnPressed">#f5bc960d</color>
 </resources>

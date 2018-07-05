@@ -1,8 +1,10 @@
 package edu.self.tasktodo.Main;
 
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -46,8 +48,10 @@ public class ToDoListFragment extends Fragment implements AdapterView.OnItemClic
         btnRemoveAll = rootView.findViewById(R.id.removeAllBtn);
 
         btnAddToDoTask.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
+                btnAddToDoTask.setBackgroundColor(btnAddToDoTask.getContext().getResources().getColor(R.color.floatingButtonOnPressed, null));
                 callback.addNewItem();
             }
         });
