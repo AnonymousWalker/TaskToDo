@@ -60,7 +60,7 @@
                     android:layout_marginLeft="30dp"
                     android:text="Title"
                     android:textColor="@color/white"
-                    android:textSize="13sp"
+                    android:textSize="24sp"
                     android:textStyle="italic" />
 
                 <EditText
@@ -73,7 +73,7 @@
                     android:hint=" What to do ..."
                     android:textColor="@color/white"
                     android:textColorHint="@color/grey"
-                    android:textSize="16sp" />
+                    android:textSize="30sp" />
             </LinearLayout>
 
             <!--Second part here-->
@@ -88,37 +88,32 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:paddingTop="20dp">
+                        android:paddingTop="20dp"
+                        android:gravity="center_vertical">
 
                         <ImageView
                             android:id="@+id/alarmIcon"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_alignParentLeft="true"
-                            android:layout_marginTop="10dp"
                             android:src="@drawable/ic_alarm_64" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
-                            android:layout_marginTop="18dp"
                             android:layout_toRightOf="@id/alarmIcon"
                             android:text="Remind Me"
-                            android:textSize="17sp" />
+                            android:textSize="26sp" />
 
                         <android.support.v7.widget.SwitchCompat
                             android:id="@+id/switchAlarm"
                             android:theme="@style/SwitchCustomTheme"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:layout_alignParentEnd="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginRight="20dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="10dp"
                             />
                     </RelativeLayout>
 
@@ -139,7 +134,7 @@
                             android:focusable="false"
                             android:focusableInTouchMode="false"
                             android:gravity="center"
-                            android:textSize="16sp"
+                            android:textSize="24sp"
                             android:textIsSelectable="false" />
 
                         <TextView
@@ -150,7 +145,7 @@
                             android:padding="4dp"
                             android:text="-"
                             android:textColor="?attr/colorAccent"
-                            android:textSize="20sp" />
+                            android:textSize="30sp" />
 
                         <EditText
                             android:id="@+id/todoTimeEditText"
@@ -161,7 +156,7 @@
                             android:focusable="false"
                             android:focusableInTouchMode="false"
                             android:gravity="center"
-                            android:textSize="16sp"
+                            android:textSize="24sp"
                             android:textIsSelectable="false" />
                     </LinearLayout>
 
